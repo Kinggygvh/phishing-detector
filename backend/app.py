@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from urllib.parse import urlparse
+from urllib.parse import quote
 import socket
 
 # Initialize Flask app
