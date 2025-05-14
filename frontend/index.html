@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phishing URL Analyzer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-6">Phishing URL Detector</h1>
+    <form id="urlForm" class="space-y-4">
+      <input type="url" id="urlInput" name="url" placeholder="Enter website URL" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+      <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition">Analyze URL</button>
+    </form>
+    <div id="result" class="mt-6 text-center hidden">
+      <p id="resultText" class="text-lg font-semibold"></p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("urlForm");
+    const result = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const url = document.getElementById("urlInput").value;
+
+      result.classList.remove("hidden");
+      resultText.textContent = "Analyzing...";
+
+      try {
+        const response = await fetch("http://localhost:8000/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        const data = await response.json();
+
+        if (data.prediction === "bad") {
+          resultText.textContent = ⚠️ Warning: This website may be phishing or malicious!";
+          resultText.className = "text-red-600 font-bold";
+        } else {
+          resultText.textContent = "✅ This website appears to be safe.";
+          resultText.className = "text-green-600 font-bold";
+        }
+      } catch (error) {
+        resultText.textContent = "❌ Error analyzing URL. Please try again.";
+        resultText.className = "text-gray-600 font-semibold";
+      }
+    });
+  </script>
+</body>
+</html>
