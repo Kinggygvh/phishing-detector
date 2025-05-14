@@ -14,6 +14,11 @@ app = Flask(__name__)
 # Path to the trained model
 model_file = 'phishing_model.pkl'
 
+# Root route to confirm service is live
+@app.route('/')
+def home():
+    return 'Phishing Detection API is running!'
+
 # Feature extraction for URLs
 def extract_features(url):
     features = []
